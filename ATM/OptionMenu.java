@@ -1,10 +1,6 @@
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class OptionMenu {
 	Scanner menuInput = new Scanner(System.in);
@@ -47,19 +43,27 @@ public class OptionMenu {
 				System.out.println("\nSelect the account you want to access: ");
 				System.out.println(" Type 1 - Checking Account");
 				System.out.println(" Type 2 - Savings Account");
-				System.out.println(" Type 3 - Exit");
+				System.out.println(" Type 3 - To display balances of all accounts");
+				System.out.println(" Type 4 - To create a new Account");
+				System.out.println(" Type 5 - Exit");
 				System.out.print("\nChoice: ");
 
 				int selection = menuInput.nextInt();
 
 				switch (selection) {
 				case 1:
-					getChecking(acc);
+					getChecking(acc, acc.getCheckingAccountNumbers());
 					break;
 				case 2:
-					getSaving(acc);
+					getSaving(acc, acc.getSavingsAccountNumbers());
 					break;
 				case 3:
+					acc.showAllBalances();
+					break;
+				case 4:
+					acc.createNewAccount();
+					break;
+				case 5 :
 					end = true;
 					break;
 				default:
@@ -72,83 +76,123 @@ public class OptionMenu {
 		}
 	}
 
-	public void getChecking(Account acc) {
+	public void getChecking(Account acc, ArrayList<Integer> accountNumbers) {
 		boolean end = false;
 		while (!end) {
 			try {
-				System.out.println("\nChecking Account: ");
-				System.out.println(" Type 1 - View Balance");
-				System.out.println(" Type 2 - Withdraw Funds");
-				System.out.println(" Type 3 - Deposit Funds");
-				System.out.println(" Type 4 - Transfer Funds");
-				System.out.println(" Type 5 - Exit");
+				System.out.println("\nSelect Checking Account: ");
+				System.out.println(" Type Account Number");
+				System.out.println(" Type 0 - Exit");
 				System.out.print("\nChoice: ");
-
 				int selection = menuInput.nextInt();
+				if (selection != 0) {
+						if (accountNumbers.contains(selection)) {
+							try {
+								System.out.println("\nChecking Account: ");
+								System.out.println(" Type 1 - View Balance");
+								System.out.println(" Type 2 - Withdraw Funds");
+								System.out.println(" Type 3 - Deposit Funds");
+								System.out.println(" Type 4 - Transfer Funds");
+								System.out.println(" Type 5 - Exit");
+								System.out.print("\nChoice: ");
 
-				switch (selection) {
-				case 1:
-					System.out.println("\nChecking Account Balance: " + moneyFormat.format(acc.getCheckingBalance()));
-					break;
-				case 2:
-					acc.getCheckingWithdrawInput();
-					break;
-				case 3:
-					acc.getCheckingDepositInput();
-					break;
+								selection = menuInput.nextInt();
 
-				case 4:
-					acc.getTransferInput("Checking");
-					break;
-				case 5:
-					end = true;
-					break;
-				default:
-					System.out.println("\nInvalid Choice.");
-				}
+								switch (selection) {
+									case 1:
+										System.out.println("\nChecking Account Balance: " + moneyFormat.format(acc.getCheckingBalance()));
+										break;
+									case 2:
+										acc.getCheckingWithdrawInput();
+										break;
+									case 3:
+										acc.getCheckingDepositInput();
+										break;
+									case 4:
+										acc.getTransferInput("Checking");
+										break;
+									case 5:
+										end = true;
+										break;
+									default:
+										System.out.println("\nInvalid Choice.");
+								}
+							} catch (InputMismatchException e) {
+								System.out.println("\nInvalid Choice.");
+								menuInput.next();
+							}
+						}else{
+							System.out.println("We do not have an account by this number.");
+							end = true;
+						}
+					}
+
+				end = true;
 			} catch (InputMismatchException e) {
-				System.out.println("\nInvalid Choice.");
-				menuInput.next();
+					System.out.println("\nInvalid Choice.");
+					menuInput.next();
 			}
 		}
+
 	}
 
-	public void getSaving(Account acc) {
+	public void getSaving(Account acc, ArrayList<Integer> savingsAccountNumbers) {
 		boolean end = false;
 		while (!end) {
 			try {
-				System.out.println("\nSavings Account: ");
-				System.out.println(" Type 1 - View Balance");
-				System.out.println(" Type 2 - Withdraw Funds");
-				System.out.println(" Type 3 - Deposit Funds");
-				System.out.println(" Type 4 - Transfer Funds");
-				System.out.println(" Type 5 - Exit");
-				System.out.print("Choice: ");
+				System.out.println("\nSelect Checking Account: ");
+				System.out.println(" Type Account Number");
+				System.out.println(" Type 0 - Exit");
+				System.out.print("\nChoice: ");
 				int selection = menuInput.nextInt();
-				switch (selection) {
-				case 1:
-					System.out.println("\nSavings Account Balance: " + moneyFormat.format(acc.getSavingBalance()));
-					break;
-				case 2:
-					acc.getsavingWithdrawInput();
-					break;
-				case 3:
-					acc.getSavingDepositInput();
-					break;
-				case 4:
-					acc.getTransferInput("Savings");
-					break;
-				case 5:
+				if(selection == 0) {
 					end = true;
-					break;
-				default:
-					System.out.println("\nInvalid Choice.");
+				}else{
+					if(savingsAccountNumbers.contains(selection)){
+							try {
+								System.out.println("\nSavings Account: ");
+								System.out.println(" Type 1 - View Balance");
+								System.out.println(" Type 2 - Withdraw Funds");
+								System.out.println(" Type 3 - Deposit Funds");
+								System.out.println(" Type 4 - Transfer Funds");
+								System.out.println(" Type 5 - Exit");
+								System.out.print("Choice: ");
+								selection = menuInput.nextInt();
+								switch (selection) {
+								case 1:
+									System.out.println("\nSavings Account Balance: " + moneyFormat.format(acc.getSavingBalance()));
+									break;
+								case 2:
+									acc.getsavingWithdrawInput();
+									break;
+								case 3:
+									acc.getSavingDepositInput();
+									break;
+								case 4:
+									acc.getTransferInput("Savings");
+									break;
+								case 5:
+									end = true;
+									break;
+								default:
+									System.out.println("\nInvalid Choice.");
+								}
+							} catch (InputMismatchException e) {
+								System.out.println("\nInvalid Choice.");
+								menuInput.next();
+							}
+						}else{
+						System.out.println("We do not have an account by this number.");
+						end = true;
+					}
+
 				}
+
 			} catch (InputMismatchException e) {
-				System.out.println("\nInvalid Choice.");
-				menuInput.next();
-			}
+			System.out.println("\nInvalid Choice.");
+			menuInput.next();
 		}
+	}
 	}
 
 	public void createAccount() throws IOException {

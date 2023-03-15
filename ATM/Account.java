@@ -1,6 +1,8 @@
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.Random;
 
 public class Account {
 	// variables
@@ -8,6 +10,9 @@ public class Account {
 	private int pinNumber;
 	private double checkingBalance = 0;
 	private double savingBalance = 0;
+	private ArrayList<Integer> savingsAccounts = new ArrayList<>();
+	private ArrayList<Integer> checkingAccounts = new ArrayList<>();
+
 
 	Scanner input = new Scanner(System.in);
 	DecimalFormat moneyFormat = new DecimalFormat("'$'###,##0.00");
@@ -53,6 +58,14 @@ public class Account {
 		return savingBalance;
 	}
 
+	public String showAllBalances(){
+		StringBuilder sb = new StringBuilder();
+		sb.setLength(0);
+		sb.append("Checking balance: " + getCheckingBalance() + "\n");
+		sb.append("Saving balance: "+ getSavingBalance()+ "\n");
+		return sb.toString();
+	}
+
 	public double calcCheckingWithdraw(double amount) {
 		checkingBalance = (checkingBalance - amount);
 		return checkingBalance;
@@ -81,6 +94,48 @@ public class Account {
 	public void calcSavingTransfer(double amount) {
 		savingBalance = savingBalance - amount;
 		checkingBalance = checkingBalance + amount;
+	}
+
+	public void createNewAccount(){
+		Random rand = new Random();
+		Scanner in = new Scanner(System.in);
+		boolean end = false;
+		while(!end){
+			try{
+				System.out.println("\nChoose what account you would like to create:");
+				System.out.println(" Type 1 - Checking Account");
+				System.out.println(" Type 2 - Savings Account");
+
+				int selection = in.nextInt();
+
+				switch (selection) {
+					case 1:
+						int temp = rand.nextInt(20);
+						System.out.println("Your new checking account number is: " + temp);
+						checkingAccounts.add(temp);
+						break;
+					case 2:
+						int temp2 = rand.nextInt(20)+30;
+						System.out.println("Your new savings account number is: " + temp2);
+						savingsAccounts.add(temp2);
+						break;
+					case 3:
+						end = true;
+						break;
+					default:
+						System.out.println("\nInvalid Choice.");
+				}
+			}catch (InputMismatchException e){
+				System.out.println("\nInvalid Choice.");
+				input.next();
+			}
+		}
+	}
+	public ArrayList<Integer> getSavingsAccountNumbers(){
+		return savingsAccounts;
+	}
+	public ArrayList<Integer> getCheckingAccountNumbers(){
+		return checkingAccounts;
 	}
 
 	public void getCheckingWithdrawInput() {
